@@ -61,7 +61,7 @@ describe('VectorComparison', () => {
   describe('setters', () => {
     it('should set both vectors with an array of objects', () => {
       let comparison = new VectorComparison(vectorA, vectorB);
-      
+
       comparison.vectorA = [{ key: 'foo', value: 5 }];
       comparison.vectorB = [{ key: 'bar', value: 6 }];
 
@@ -70,6 +70,26 @@ describe('VectorComparison', () => {
 
       comparison.vectorA[0].value.should.equal(5);
       comparison.vectorB[0].value.should.equal(6);
+    });
+
+    it('must use an array for setting both vectors', () => {
+      let comparison = new VectorComparison(vectorA, vectorB);
+
+      try {
+        comparison.vectorA = 'foo';
+      }
+      catch(e) {
+        e.should.be.an.instanceof(Error);
+        e.message.should.equal('vector must be an array');
+      }
+
+      try {
+        comparison.vectorB = 'foo';
+      }
+      catch(e) {
+        e.should.be.an.instanceof(Error);
+        e.message.should.equal('vector must be an array');
+      }
     });
   });
 
