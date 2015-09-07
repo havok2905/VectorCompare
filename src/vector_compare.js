@@ -1,47 +1,67 @@
-module.exports = class VectorCompare {
+module.exports = class VectorComparison {
 
-  /*
-   * .dotProduct
-   *
-   * Return a score of how similar the vectors are
-   * based on the dot product.
-   *
-   * Params
-   *   - vectorA <Integer>Array
-   *   - vectorB <Integer>Array
-   * Returns
-   *   - Integer
-   */
+  // Public
 
-  static dotProduct(vectorA, vectorB) {
-    if(vectorA.length !== vectorB.length) {
-      throw new Error('Vector lengths must be equal');
-    }
-
-    let result = 0;
-
-    vectorA.forEach((value, index) => {
-      result += value * vectorB[index];
-    });
-
-    return result;
+  constructor(vectorA, vectorB) {
+    this._vectorA = vectorA;
+    this._vectorB = vectorB;
   }
 
-  /*
-   * .sortAll
-   *
-   * Return two new vectors that are sorted.
-   * Should utilize quicksort under the hood.
-   *
-   * Params
-   *   - vectorA <Object>Array
-   *   - vectorB <Object>Array
-   * Returns
-   *   - Void
-   */
+  run() {
+    this._normalizeAll();
+    this._sortAll();
 
-  static sortAll(vectorA, vectorB) {
-    [vectorA, vectorB].forEach((vector) => {
+    let result = this._dotProduct() / this._squaredProducts();
+
+    return Math.round(result * 100) / 100;
+  }
+
+  get vectorA() {
+    return this._vectorA;
+  }
+
+  set vectorA(vector) {
+    this._setVector(vector, '_vectorA');
+  }
+
+  get vectorB() {
+    return this._vectorB;
+  }
+
+  set vectorB(vector) {
+    this._setVector(vector, '_vectorB');
+  }
+
+  // Private
+
+  _setVector(vector, name) {
+    if(vector instanceof Array) {
+      this[name] = vector;
+    }
+    else {
+      throw new Error('vector must be an array');
+    }
+  }
+
+  _normalizeAll() {
+    let vectorAKeys = this.vectorA.map((item) => { return item.key }),
+        vectorBKeys = this.vectorB.map((item) => { return item.key });
+
+    vectorAKeys.forEach((key) => {
+      if(vectorBKeys.indexOf(key) === -1) {
+        this.vectorB.push({key: key, value: 0});
+      }
+    });
+
+    vectorBKeys.forEach((key) => {
+      if(vectorAKeys.indexOf(key) === -1) {
+        this.vectorA.push({key: key, value: 0});
+      }
+    });
+  }
+
+  _sortAll() {
+    [this.vectorA, this.vectorB].forEach((vector) => {
       vector.sort(function(a, b){
         if(a.key < b.key) return -1;
         if(a.key > b.key) return 1;
@@ -50,32 +70,28 @@ module.exports = class VectorCompare {
     });
   }
 
-  /*
-   * .normalizeAll
-   *
-   * Fill in missing keys with 0 value for each vector
-   *
-   * Params
-   *   - vectorA <Object>Array
-   *   - vectorB <Object>Array
-   * Returns
-   *   - Void
-   */
+  _dotProduct() {
+    let result = 0;
 
-  static normalizeAll(vectorA, vectorB) {
-    let vectorAKeys = vectorA.map((item) => { return item.key }),
-        vectorBKeys = vectorB.map((item) => { return item.key });
-
-    vectorAKeys.forEach((key) => {
-      if(vectorBKeys.indexOf(key) === -1) {
-        vectorB.push({key: key, value: 0});
-      }
+    this.vectorA.forEach((item, index) => {
+      result += item.value * this.vectorB[index].value;
     });
 
-    vectorBKeys.forEach((key) => {
-      if(vectorAKeys.indexOf(key) === -1) {
-        vectorA.push({key: key, value: 0});
-      }
+    return result;
+  }
+
+  _squaredProducts() {
+    let aTotal = 0,
+        bTotal = 0;
+
+    this.vectorA.forEach((item, index) => {
+      aTotal += item.value * item.value;
     });
+
+    this.vectorB.forEach((item, index) => {
+      bTotal += item.value * item.value;
+    });
+
+    return Math.sqrt(aTotal) * Math.sqrt(bTotal);
   }
 }
