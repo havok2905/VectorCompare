@@ -38,17 +38,17 @@ describe('VectorComparison', () => {
     ];
 
     vectorB = [
-      { key: 'foo',  value: 1 },
-      { key: 'fooo', value: 1 },
-      { key: 'barr', value: 2 },
-      { key: 'bazz', value: 3 },
-      { key: 'batt', value: 4 }
+      { key: 'foo',  value: 5 },
+      { key: 'fooo', value: 3 },
+      { key: 'bar',  value: 2 },
+      { key: 'baz',  value: 5 },
+      { key: 'bat',  value: 4 }
     ];
   });
 
   const EXACT_MATCH = 1;
   const OPPOSITE_MATCH = -1;
-  const RANDOM_MATCH = 0.06;
+  const RANDOM_MATCH = 0.87;
 
   describe('getters', () => {
     it('should return an array for both vectors', () => {
@@ -95,22 +95,6 @@ describe('VectorComparison', () => {
 
   describe('run', () => {
     let comparison, result;
-
-    it('should take two vectors and sort/normalize them', () => {
-      comparison = new VectorComparison(vectorA, vectorB);
-      result = comparison.run();
-
-      [vectorA, vectorB].forEach((vector) => {
-        vector[0].key.should.equal('bar');
-        vector[1].key.should.equal('barr');
-        vector[2].key.should.equal('bat');
-        vector[3].key.should.equal('batt');
-        vector[4].key.should.equal('baz');
-        vector[5].key.should.equal('bazz');
-        vector[6].key.should.equal('foo');
-        vector[7].key.should.equal('fooo');
-      });
-    });
 
     it('should indicate a match', () => {
       comparison = new VectorComparison(vectorA, vectorAMatch);

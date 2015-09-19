@@ -18,28 +18,8 @@ module.exports = (function () {
   _createClass(VectorComparison, [{
     key: 'run',
     value: function run() {
-      this._normalizeAll();
-      this._sortAll();
-
       var result = this._dotProduct() / this._squaredProducts();
-
       return Math.round(result * 100) / 100;
-    }
-  }, {
-    key: 'vectorA',
-    get: function () {
-      return this._vectorA;
-    },
-    set: function (vector) {
-      this._setVector(vector, '_vectorA');
-    }
-  }, {
-    key: 'vectorB',
-    get: function () {
-      return this._vectorB;
-    },
-    set: function (vector) {
-      this._setVector(vector, '_vectorB');
     }
   }, {
     key: '_setVector',
@@ -54,49 +34,14 @@ module.exports = (function () {
       }
     }
   }, {
-    key: '_normalizeAll',
-    value: function _normalizeAll() {
-      var _this = this;
-
-      var vectorAKeys = this.vectorA.map(function (item) {
-        return item.key;
-      }),
-          vectorBKeys = this.vectorB.map(function (item) {
-        return item.key;
-      });
-
-      vectorAKeys.forEach(function (key) {
-        if (vectorBKeys.indexOf(key) === -1) {
-          _this.vectorB.push({ key: key, value: 0 });
-        }
-      });
-
-      vectorBKeys.forEach(function (key) {
-        if (vectorAKeys.indexOf(key) === -1) {
-          _this.vectorA.push({ key: key, value: 0 });
-        }
-      });
-    }
-  }, {
-    key: '_sortAll',
-    value: function _sortAll() {
-      [this.vectorA, this.vectorB].forEach(function (vector) {
-        vector.sort(function (a, b) {
-          if (a.key < b.key) return -1;
-          if (a.key > b.key) return 1;
-          return 0;
-        });
-      });
-    }
-  }, {
     key: '_dotProduct',
     value: function _dotProduct() {
-      var _this2 = this;
+      var _this = this;
 
       var result = 0;
 
       this.vectorA.forEach(function (item, index) {
-        result += item.value * _this2.vectorB[index].value;
+        result += item.value * _this.vectorB[index].value;
       });
 
       return result;
@@ -116,6 +61,22 @@ module.exports = (function () {
       });
 
       return Math.sqrt(aTotal) * Math.sqrt(bTotal);
+    }
+  }, {
+    key: 'vectorA',
+    get: function get() {
+      return this._vectorA;
+    },
+    set: function set(vector) {
+      this._setVector(vector, '_vectorA');
+    }
+  }, {
+    key: 'vectorB',
+    get: function get() {
+      return this._vectorB;
+    },
+    set: function set(vector) {
+      this._setVector(vector, '_vectorB');
     }
   }]);
 

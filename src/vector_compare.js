@@ -8,11 +8,7 @@ module.exports = class VectorComparison {
   }
 
   run() {
-    this._normalizeAll();
-    this._sortAll();
-
     let result = this._dotProduct() / this._squaredProducts();
-
     return Math.round(result * 100) / 100;
   }
 
@@ -41,33 +37,6 @@ module.exports = class VectorComparison {
     else {
       throw new Error('vector must be an array');
     }
-  }
-
-  _normalizeAll() {
-    let vectorAKeys = this.vectorA.map((item) => { return item.key }),
-        vectorBKeys = this.vectorB.map((item) => { return item.key });
-
-    vectorAKeys.forEach((key) => {
-      if(vectorBKeys.indexOf(key) === -1) {
-        this.vectorB.push({key: key, value: 0});
-      }
-    });
-
-    vectorBKeys.forEach((key) => {
-      if(vectorAKeys.indexOf(key) === -1) {
-        this.vectorA.push({key: key, value: 0});
-      }
-    });
-  }
-
-  _sortAll() {
-    [this.vectorA, this.vectorB].forEach((vector) => {
-      vector.sort(function(a, b){
-        if(a.key < b.key) return -1;
-        if(a.key > b.key) return 1;
-        return 0;
-      });
-    });
   }
 
   _dotProduct() {
